@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMAT Study Tracker - Aishwarya's Journey</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button id="reset-btn" class="reset-button" title="Reset all data">🔄 Reset</button>
+            <h1>🎯 GMAT Study Tracker</h1>
+            <p class="subtitle" id="user-subtitle">Aishwarya's Journey to January 10, 2026</p>
+            <div class="exam-countdown">
+                ⏰ <span id="days-remaining">0</span> days until exam!
+            </div>
+        </header>
+
+        <div class="progress-section">
+            <h2>Overall Progress</h2>
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-stats">
+                    <span id="total-hours">0</span> hours studied
+                    <span class="separator">|</span>
+                    <span id="total-days">0</span> days active
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <button id="prev-month" class="nav-btn">←</button>
+                    <h2 id="current-month-year"></h2>
+                    <button id="next-month" class="nav-btn">→</button>
+                </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat-card">
+                    <h3>📅 Today</h3>
+                    <div class="stat-value" id="today-hours">0</div>
+                    <div class="stat-label">hours</div>
+                </div>
+                <div class="stat-card">
+                    <h3>📊 This Week</h3>
+                    <div class="stat-value" id="week-hours">0</div>
+                    <div class="stat-label">hours</div>
+                </div>
+                <div class="stat-card">
+                    <h3>⚡ Average</h3>
+                    <div class="stat-value" id="avg-hours">0</div>
+                    <div class="stat-label">hours/day</div>
+                </div>
+                <div class="clock-in-card">
+                    <h3>⏰ Clock In</h3>
+                    <div class="clock-in-form">
+                        <select id="study-hours" class="study-hours-dropdown">
+                            <option value="0">Select hours...</option>
+                            <option value="0.5">0.5 hours</option>
+                            <option value="1">1 hour</option>
+                            <option value="1.5">1.5 hours</option>
+                            <option value="2">2 hours</option>
+                            <option value="2.5">2.5 hours</option>
+                            <option value="3">3 hours</option>
+                            <option value="3.5">3.5 hours</option>
+                            <option value="4">4 hours</option>
+                            <option value="4.5">4.5 hours</option>
+                            <option value="5">5 hours</option>
+                            <option value="5.5">5.5 hours</option>
+                            <option value="6">6 hours</option>
+                            <option value="6.5">6.5 hours</option>
+                            <option value="7">7 hours</option>
+                            <option value="7.5">7.5 hours</option>
+                            <option value="8">8 hours</option>
+                            <option value="8.5">8.5 hours</option>
+                            <option value="9">9 hours</option>
+                            <option value="9.5">9.5 hours</option>
+                            <option value="10">10 hours</option>
+                            <option value="10.5">10.5 hours</option>
+                            <option value="11">11 hours</option>
+                            <option value="11.5">11.5 hours</option>
+                            <option value="12">12 hours</option>
+                        </select>
+                        <button id="clock-in-btn" class="clock-in-button">Clock In</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h2>Study Hours Analysis</h2>
+            <canvas id="study-chart"></canvas>
+        </div>
+
+        <div class="achievements-section">
+            <h2>🏆 Achievements</h2>
+            <div class="achievements-grid" id="achievements-grid"></div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <div id="success-modal" class="success-modal">
+        <div class="success-modal-content">
+            <div class="success-icon">🎉</div>
+            <h1>Congratulations!</h1>
+            <p class="success-message">You've reached your goal!</p>
+            <p class="success-submessage">All the best for your exam!</p>
+            <button id="close-success-modal" class="close-success-btn">Continue</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
