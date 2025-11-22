@@ -47,9 +47,9 @@ function promptForName() {
 // Initialize user name (show nudge if no name)
 function initializeUserName() {
     const name = getUserName();
-    
+
     updateSubtitle();
-    
+
     // If no name found, show a friendly nudge every time
     if (!name) {
         setTimeout(() => {
@@ -84,23 +84,23 @@ Are you REALLY sure you want to delete all your progress?
 
 If you still want to proceed, enter the password.
     `.trim();
-    
+
     alert(motivationalMessage);
-    
+
     // Prompt for password
     const password = prompt('Enter password to reset all data (or click Cancel to keep going):');
     const correctPassword = 'ihavecrackedgmat@123';
-    
+
     if (password === null) {
         showNotification('💪 Great choice! Keep pushing forward!', true);
         return;
     }
-    
+
     if (password !== correctPassword) {
         showNotification('❌ Incorrect password! Your progress is safe. Keep going!', false);
         return;
     }
-    
+
     if (confirm('Final confirmation: Delete ALL your hard-earned progress?')) {
         // Clear study data
         studyData = {
@@ -110,15 +110,15 @@ If you still want to proceed, enter the password.
             achievements: []
         };
         localStorage.removeItem(STORAGE_KEY);
-        
+
         // Clear name
         localStorage.removeItem(NAME_STORAGE_KEY);
         updateSubtitle();
-        
+
         // Clear success modal shown flag
         const today = getDateString(new Date());
         localStorage.removeItem('success_modal_shown_' + today);
-        
+
         // Refresh the UI
         saveData();
         updateCountdown();
@@ -127,7 +127,7 @@ If you still want to proceed, enter the password.
         renderCalendar();
         updateChart();
         renderAchievements();
-        
+
         showNotification('✅ All data has been reset. Fresh start!', true);
     } else {
         showNotification('💪 Smart decision! Your progress is preserved!', true);
@@ -170,15 +170,15 @@ function updateProgress() {
     const totalHours = studyData.totalHours;
     const daysActive = Object.keys(studyData.dailyHours).length;
     const daysSinceStart = Math.ceil((new Date() - new Date(studyData.startDate)) / (1000 * 60 * 60 * 24));
-    
+
     // Calculate progress percentage (assuming 500 hours as a goal, adjust as needed)
     const goalHours = 500;
     const progressPercent = Math.min((totalHours / goalHours) * 100, 100);
-    
+
     document.getElementById('progress-fill').style.width = progressPercent + '%';
     document.getElementById('total-hours').textContent = totalHours.toFixed(1);
     document.getElementById('total-days').textContent = daysActive;
-    
+
     // Check for success conditions
     checkSuccessConditions(progressPercent);
 }
@@ -191,11 +191,11 @@ function checkSuccessConditions(progressPercent) {
     exam.setHours(0, 0, 0, 0);
     const isExamDay = today.getTime() === exam.getTime();
     const isProgressComplete = progressPercent >= 100;
-    
+
     // Check if we should show success modal (only once per day)
     const lastShownKey = 'success_modal_shown_' + getDateString(today);
     const lastShown = localStorage.getItem(lastShownKey);
-    
+
     if ((isExamDay || isProgressComplete) && !lastShown) {
         showSuccessModal();
         localStorage.setItem(lastShownKey, 'true');
@@ -210,14 +210,14 @@ function showSuccessModal() {
     const exam = new Date(EXAM_DATE);
     exam.setHours(0, 0, 0, 0);
     const isExamDay = today.getTime() === exam.getTime();
-    
+
     // Update message based on condition
     if (isExamDay) {
         document.querySelector('.success-message').textContent = "Today is your exam day!";
     } else {
         document.querySelector('.success-message').textContent = "You've reached 100% of your goal!";
     }
-    
+
     modal.classList.add('show');
 }
 
@@ -231,7 +231,7 @@ function closeSuccessModal() {
 function updateStats() {
     const today = getDateString(new Date());
     const todayHours = studyData.dailyHours[today] || 0;
-    
+
     // Calculate week hours
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
@@ -242,11 +242,11 @@ function updateStats() {
         const dateStr = getDateString(date);
         weekHours += studyData.dailyHours[dateStr] || 0;
     }
-    
+
     // Calculate average
     const daysActive = Object.keys(studyData.dailyHours).length;
     const avgHours = daysActive > 0 ? studyData.totalHours / daysActive : 0;
-    
+
     document.getElementById('today-hours').textContent = todayHours.toFixed(1);
     document.getElementById('week-hours').textContent = weekHours.toFixed(1);
     document.getElementById('avg-hours').textContent = avgHours.toFixed(1);
@@ -256,7 +256,7 @@ function updateStats() {
 function renderCalendar() {
     const grid = document.getElementById('calendar-grid');
     grid.innerHTML = '';
-    
+
     // Day headers
     const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     dayHeaders.forEach(day => {
@@ -265,35 +265,35 @@ function renderCalendar() {
         header.textContent = day;
         grid.appendChild(header);
     });
-    
+
     // Get first day of month and number of days
     const firstDay = new Date(currentYear, currentMonth, 1);
     const lastDay = new Date(currentYear, currentMonth + 1, 0);
     const daysInMonth = lastDay.getDate();
     const startingDayOfWeek = firstDay.getDay();
-    
+
     // Empty cells for days before month starts
     for (let i = 0; i < startingDayOfWeek; i++) {
         const empty = document.createElement('div');
         empty.className = 'calendar-day';
         grid.appendChild(empty);
     }
-    
+
     // Days of the month
     const today = new Date();
     for (let day = 1; day <= daysInMonth; day++) {
         const date = new Date(currentYear, currentMonth, day);
         const dateStr = getDateString(date);
         const hours = studyData.dailyHours[dateStr] || 0;
-        
+
         const dayElement = document.createElement('div');
         dayElement.className = 'calendar-day';
-        
+
         // Check if today
         if (dateStr === getDateString(today)) {
             dayElement.classList.add('today');
         }
-        
+
         // Check if has hours
         if (hours > 0) {
             dayElement.classList.add('has-hours');
@@ -301,39 +301,40 @@ function renderCalendar() {
                 dayElement.classList.add('high-hours');
             }
         }
-        
+
         const dayNumber = document.createElement('div');
         dayNumber.className = 'calendar-day-number';
         dayNumber.textContent = day;
-        
+
         const dayHours = document.createElement('div');
         dayHours.className = 'calendar-day-hours';
         dayHours.textContent = hours > 0 ? hours + 'h' : '';
-        
+
         dayElement.appendChild(dayNumber);
         dayElement.appendChild(dayHours);
-        
+
         // Add click to edit
         dayElement.addEventListener('click', () => {
             const input = prompt(`Enter hours studied on ${dateStr}:`, hours);
             if (input !== null) {
-                const newHours = parseFloat(input) || 0;
+                const trimmedInput = input.trim();
+                const newHours = parseFloat(trimmedInput);
                 // Validate: prevent negative values
-                if (newHours < 0) {
-                    alert('Hours cannot be negative! Please enter a valid number.');
+                if (!trimmedInput || isNaN(newHours) || newHours <= 0) {
+                    alert('Hours must be a positive number. Please enter a valid value.');
                     return;
                 }
                 updateDayHours(dateStr, newHours);
             }
         });
-        
+
         grid.appendChild(dayElement);
     }
-    
+
     // Update month/year display
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'];
-    document.getElementById('current-month-year').textContent = 
+    document.getElementById('current-month-year').textContent =
         `${monthNames[currentMonth]} ${currentYear}`;
 }
 
@@ -341,10 +342,10 @@ function renderCalendar() {
 function updateDayHours(dateStr, hours) {
     const oldHours = studyData.dailyHours[dateStr] || 0;
     studyData.dailyHours[dateStr] = hours;
-    
+
     // Update total
     studyData.totalHours = studyData.totalHours - oldHours + hours;
-    
+
     saveData();
     renderCalendar();
     updateProgress();
@@ -356,26 +357,27 @@ function updateDayHours(dateStr, hours) {
 // Clock in
 function clockIn() {
     const hoursInput = document.getElementById('study-hours');
-    const hours = parseFloat(hoursInput.value) || 0;
-    
+    const rawValue = hoursInput.value;
+    const hours = parseFloat(rawValue);
+
     // Validate: must be positive and greater than 0
-    if (hours <= 0 || hours < 0) {
-        showNotification('Please select a valid number of hours!', false);
+    if (!rawValue || isNaN(hours) || hours <= 0) {
+        showNotification('Please select a valid positive number of hours!', false);
         hoursInput.value = '0';
         return;
     }
-    
+
     const today = getDateString(new Date());
     const oldHours = studyData.dailyHours[today] || 0;
-    
+
     // Overwrite existing hours instead of adding
     updateDayHours(today, hours);
-    
+
     // Show congratulations based on hours
-    let message = oldHours > 0 
+    let message = oldHours > 0
         ? `Updated! You've logged ${hours} hour${hours !== 1 ? 's' : ''} for today!`
         : `Great job! You've clocked in ${hours} hour${hours !== 1 ? 's' : ''}!`;
-    
+
     if (hours >= 8) {
         message = `🎉 Amazing! ${hours} hours today! You're a study champion!`;
         showNotification(message, true);
@@ -388,7 +390,7 @@ function clockIn() {
     } else {
         showNotification(message, true);
     }
-    
+
     hoursInput.value = '0';
 }
 
@@ -400,7 +402,7 @@ function showNotification(message, isSuccess) {
     if (isSuccess) {
         notification.classList.add('achievement');
     }
-    
+
     setTimeout(() => {
         notification.classList.remove('show');
     }, 3000);
@@ -411,12 +413,12 @@ let studyChart = null;
 
 function updateChart() {
     const ctx = document.getElementById('study-chart').getContext('2d');
-    
+
     // Get last 30 days of data
     const dates = [];
     const hours = [];
     const today = new Date();
-    
+
     for (let i = 29; i >= 0; i--) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
@@ -424,11 +426,11 @@ function updateChart() {
         dates.push(dateStr);
         hours.push(studyData.dailyHours[dateStr] || 0);
     }
-    
+
     if (studyChart) {
         studyChart.destroy();
     }
-    
+
     studyChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -501,24 +503,30 @@ const achievements = [
     { id: '100_hours', icon: '💎', title: 'Century Club', desc: 'Reach 100 total hours', check: () => studyData.totalHours >= 100 },
     { id: '250_hours', icon: '👑', title: 'Elite Scholar', desc: 'Reach 250 total hours', check: () => studyData.totalHours >= 250 },
     { id: '500_hours', icon: '🏆', title: 'Master Student', desc: 'Reach 500 total hours', check: () => studyData.totalHours >= 500 },
-    { id: '6_hour_day', icon: '🔥', title: 'Power Day', desc: 'Study 6+ hours in one day', check: () => {
-        return Object.values(studyData.dailyHours).some(h => h >= 6);
-    }},
-    { id: '8_hour_day', icon: '💪', title: 'Marathon Day', desc: 'Study 8+ hours in one day', check: () => {
-        return Object.values(studyData.dailyHours).some(h => h >= 8);
-    }},
-    { id: '7_day_streak', icon: '📅', title: 'Week Warrior', desc: 'Study 7 days in a row', check: () => {
-        const dates = Object.keys(studyData.dailyHours).sort();
-        if (dates.length < 7) return false;
-        // Check for consecutive days
-        for (let i = dates.length - 7; i < dates.length - 1; i++) {
-            const date1 = new Date(dates[i]);
-            const date2 = new Date(dates[i + 1]);
-            const diff = (date2 - date1) / (1000 * 60 * 60 * 24);
-            if (diff !== 1) return false;
+    {
+        id: '6_hour_day', icon: '🔥', title: 'Power Day', desc: 'Study 6+ hours in one day', check: () => {
+            return Object.values(studyData.dailyHours).some(h => h >= 6);
         }
-        return true;
-    }},
+    },
+    {
+        id: '8_hour_day', icon: '💪', title: 'Marathon Day', desc: 'Study 8+ hours in one day', check: () => {
+            return Object.values(studyData.dailyHours).some(h => h >= 8);
+        }
+    },
+    {
+        id: '7_day_streak', icon: '📅', title: 'Week Warrior', desc: 'Study 7 days in a row', check: () => {
+            const dates = Object.keys(studyData.dailyHours).sort();
+            if (dates.length < 7) return false;
+            // Check for consecutive days
+            for (let i = dates.length - 7; i < dates.length - 1; i++) {
+                const date1 = new Date(dates[i]);
+                const date2 = new Date(dates[i + 1]);
+                const diff = (date2 - date1) / (1000 * 60 * 60 * 24);
+                if (diff !== 1) return false;
+            }
+            return true;
+        }
+    },
     { id: '30_days', icon: '📚', title: 'Monthly Dedication', desc: 'Study for 30 different days', check: () => Object.keys(studyData.dailyHours).length >= 30 }
 ];
 
@@ -536,27 +544,27 @@ function checkAchievements() {
 function renderAchievements() {
     const grid = document.getElementById('achievements-grid');
     grid.innerHTML = '';
-    
+
     achievements.forEach(achievement => {
         const card = document.createElement('div');
         card.className = 'achievement-card';
-        
+
         if (studyData.achievements.includes(achievement.id)) {
             card.classList.add('unlocked');
         }
-        
+
         const icon = document.createElement('div');
         icon.className = 'achievement-icon';
         icon.textContent = achievement.icon;
-        
+
         const title = document.createElement('div');
         title.className = 'achievement-title';
         title.textContent = achievement.title;
-        
+
         const desc = document.createElement('div');
         desc.className = 'achievement-desc';
         desc.textContent = achievement.desc;
-        
+
         card.appendChild(icon);
         card.appendChild(title);
         card.appendChild(desc);
